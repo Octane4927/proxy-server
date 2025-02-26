@@ -31,4 +31,6 @@ def proxy(url):
         return f"Error: {e}"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    # Change port to 10000 for Render compatibility
+    app.run(host='0.0.0.0', port=10000, debug=True)
+
