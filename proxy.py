@@ -14,6 +14,35 @@ def proxy(url):
         if not url.startswith('http'):
             url = 'http://' + url
         
+        # Log the URL to check if it's being passed correctly
+        app.logger.debug(f"Accessing URL: {url}")
+        
+        # Make the GET request to the target URL
+        response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+        
+        # Log the status code of the response
+        app.logger.debug(f"Response status code: {response.status_code}")
+        
+        # Return the content and headers from the response
+        return Response(response.content, content_type=response.headers['Content-Type'])
+    
+    except Exception as e:
+        # Log the exception if something goes wrong
+        app.logger.error(f"Error: {e}")
+        return f"Error: {e}"
+
+if __name__ == '__main__':
+    # Run the app on port 10000 for Render compatibility
+    app.run(host='0.0.0.0', port=10000, debug=True)
+
+
+@app.route('/<path:url>', methods=['GET'])
+def proxy(url):
+    try:
+        # Add "http://" if not present in the URL
+        if not url.startswith('http'):
+            url = 'http://' + url
+        
         # Log the URL being accessed
         app.logger.debug(f"Accessing URL: {url}")
         
