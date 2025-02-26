@@ -33,4 +33,23 @@ def proxy(url):
 if __name__ == '__main__':
     # Change port to 10000 for Render compatibility
     app.run(host='0.0.0.0', port=10000, debug=True)
+@app.route('/<path:url>', methods=['GET'])
+def proxy(url):
+    try:
+        # Add "http://" if not present in the URL
+        if not url.startswith('http'):
+            url = 'http://' + url
+        
+        # Log the URL to check if it's being passed correctly
+        app.logger.debug(f"Accessing URL: {url}")
+        
+        # Make the GET request to the target URL
+        response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+        
+        # Return the content and headers from the response
+        return Response(response.content, content_type=response.headers['Content-Type'])
+    
+    except Exception as e:
+        return f"Error: {e}"
+
 
